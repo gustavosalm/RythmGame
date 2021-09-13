@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Startup.unity
+    guid: 0660fd4f71defc14bab7406b40620717
+  - enabled: 1
+    path: Assets/Scenes/PR.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/PGK.unity
+    guid: edf56b777cc16d64e88186198ab02343
+  - enabled: 1
+    path: Assets/Scenes/RR.unity
+    guid: 45214b66a95ecf54489e0984a433f40f
+  - enabled: 1
+    path: Assets/Scenes/TACKLE.unity
+    guid: b15d5a85347fd624e8b028d27943a99a
+  - enabled: 1
+    path: Assets/Scenes/RGK.unity
+    guid: 7154fa2167ebd564aba3edc4e38d92f1
+  m_configObjects: {}
