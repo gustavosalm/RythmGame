@@ -24,13 +24,17 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(string acc){
         score += 10 * float.Parse(acc);
         score = Mathf.Clamp(score, 0, scoreGoal);
-        print(score);
         progressBar.fillAmount = score / scoreGoal;
     }
 
     public void ReduceScore(string scoreMissed){
         score -= 5;
         score = Mathf.Clamp(score, 0, scoreGoal);
+        progressBar.fillAmount = score / scoreGoal;
+    }
+
+    public void ResetScore(){
+        score = 0;
         progressBar.fillAmount = score / scoreGoal;
     }
 

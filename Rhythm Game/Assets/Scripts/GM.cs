@@ -9,11 +9,14 @@ public class GM : MonoBehaviour
 {
     public GameObject[] Tracks;
     string scene;
+    private ScoreManager sm;
+    private MapManager mm;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        sm = this.GetComponent<ScoreManager>();
+        mm = this.GetComponent<MapManager>();
     }
 
     // Update is called once per frame
@@ -26,28 +29,38 @@ public class GM : MonoBehaviour
             SceneManager.LoadScene("PR");
         }
         
+        // rodar só uma vez
         ActiveTracks(scene);
 
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            SceneManager.LoadScene("PGK");
+        if (Input.GetKeyDown(KeyCode.O) && sm.score == sm.scoreGoal){
+            // chute
         }
-        else if (Input.GetKeyDown(KeyCode.Y))
-        {
-            SceneManager.LoadScene("RR");
+        else if (Input.GetKeyDown(KeyCode.P) && sm.score == sm.scoreGoal){
+            // passe
+            sm.ResetScore();
+            mm.MoveBall(1);
         }
-        else if (Input.GetKeyDown(KeyCode.U))
-        {
-            SceneManager.LoadScene("RGK");
-        }
-        else if (Input.GetKeyDown(KeyCode.I))
-        {
-            SceneManager.LoadScene("TACKLE");
-        }
-        else if (Input.GetKeyDown(KeyCode.G))
-        {
-            SceneManager.LoadScene("PR");
-        }
+
+        // if (Input.GetKeyDown(KeyCode.T))
+        // {
+        //     SceneManager.LoadScene("PGK");
+        // }
+        // else if (Input.GetKeyDown(KeyCode.Y))
+        // {
+        //     SceneManager.LoadScene("RR");
+        // }
+        // else if (Input.GetKeyDown(KeyCode.U))
+        // {
+        //     SceneManager.LoadScene("RGK");
+        // }
+        // else if (Input.GetKeyDown(KeyCode.I))
+        // {
+        //     SceneManager.LoadScene("TACKLE");
+        // }
+        // else if (Input.GetKeyDown(KeyCode.G))
+        // {
+        //     SceneManager.LoadScene("PR");
+        // }
     }
 
     void ActiveTracks(string scene)
