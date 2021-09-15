@@ -21,6 +21,8 @@ namespace RhythmGameStarter
         public StringEvent onMaxComboUpdate;
         [CollapsedEvent]
         public StringEvent onMissedUpdate;
+        [CollapsedEvent]
+        public StringEvent onScoreDeltaUpdate;
 
         #region RUNTIME_FIELD
         [NonSerialized] public int combo;
@@ -56,7 +58,8 @@ namespace RhythmGameStarter
 
         public void AddCombo(int addCombo, float deltaDiff, int addScore)
         {
-            // print(deltaDiff);
+            onScoreDeltaUpdate.Invoke(deltaDiff.ToString());
+
             combo += addCombo;
             if (combo > maxCombo)
             {

@@ -10,7 +10,7 @@ public class SceneStart : MonoBehaviour
     public SongItem songItem; //songitem espec�fico da cena atual
     public Transform[] trackPos, newTrackPos; //array com as posi��es do rhythmcore e do dummy position
 
-    GameObject rhythmCore; //refer�ncias aos respectivos gameobjects
+    GameObject rhythmCore, gameManager; //refer�ncias aos respectivos gameobjects
     TrackManager trackManager; 
     SongManager songManager;
 
@@ -19,6 +19,7 @@ public class SceneStart : MonoBehaviour
     {
         //criando as refer�ncias para utilizar no restante do scrpit
         rhythmCore = GameObject.Find("RhythmCore 1");
+        gameManager = GameObject.Find("Game Manager");
         trackManager = rhythmCore.GetComponent<TrackManager>();
         songManager = rhythmCore.GetComponent<SongManager>();
 
@@ -60,22 +61,18 @@ public class SceneStart : MonoBehaviour
 
     void UpdateSong()
     {
+        songManager.defaultSong = songItem;
+        songManager.currnetNotes = songItem.GetNotes();
+        gameManager.GetComponent<ScoreManager>().destroyNotes = true;
+        StartCoroutine("ResetNoteSpawn");
+        trackManager.SetUpNotePool();
         for (int i = 0; i < 4; i++)
         {
             rhythmCore.transform.GetChild(i).GetComponent<Track>().RecycleAllNotes(trackManager);
-            // GameObject[] notes = GameObject.FindGameObjectsWithTag("Note");
-            // print(notes.Length);
-            // foreach(GameObject child in notes){
-            //     print(child.gameObject.name);
-            //     Destroy(child.gameObject);
-            // }
         }
-        songManager.defaultSong = songItem;
-        songManager.currnetNotes = songItem.GetNotes();
-        // trackManager.SetUpNotePool();
     }
-    public IEnumerator SetNotePool(){
-        yield return new WaitForSeconds(1);
-        trackManager.SetUpNotePool();
+    public IEnumerator ResetNoteSpawn(){
+        yield return new WaitForSeconds(.5f);
+        gameManager.GetComponent<ScoreManager>().destroyNotes = false;
     }
 }
