@@ -40,7 +40,7 @@ public class ScoreManager : MonoBehaviour
 
     public void DestroyNotes(Note note){
         if(destroyNotes){
-            Destroy(note.gameObject);
+            note.gameObject.SetActive(false);
         }
     }
 }

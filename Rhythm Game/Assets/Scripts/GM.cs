@@ -11,6 +11,7 @@ public class GM : MonoBehaviour
     string scene;
     private ScoreManager sm;
     private MapManager mm;
+    public string changeScene = "";
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +35,8 @@ public class GM : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O) && sm.score == sm.scoreGoal){
             // chute
+            sm.ResetScore();
+            mm.MoveBall(2);
         }
         else if (Input.GetKeyDown(KeyCode.P) && sm.score == sm.scoreGoal){
             // passe
@@ -41,6 +44,15 @@ public class GM : MonoBehaviour
             mm.MoveBall(1);
         }
 
+        if(changeScene != ""){
+            SceneManager.LoadScene(changeScene);
+            changeScene = "";
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            SceneManager.LoadScene("PR");
+        }
         // if (Input.GetKeyDown(KeyCode.T))
         // {
         //     SceneManager.LoadScene("PGK");
@@ -61,6 +73,10 @@ public class GM : MonoBehaviour
         // {
         //     SceneManager.LoadScene("PR");
         // }
+    }
+
+    public void ChangeScene(string sceneName){
+        SceneManager.LoadScene(sceneName);
     }
 
     void ActiveTracks(string scene)
@@ -103,5 +119,4 @@ public class GM : MonoBehaviour
                 break;
         }
     }
-   
 }

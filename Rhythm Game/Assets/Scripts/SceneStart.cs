@@ -66,10 +66,10 @@ public class SceneStart : MonoBehaviour
         gameManager.GetComponent<ScoreManager>().destroyNotes = true;
         StartCoroutine("ResetNoteSpawn");
         trackManager.SetUpNotePool();
-        for (int i = 0; i < 4; i++)
-        {
-            rhythmCore.transform.GetChild(i).GetComponent<Track>().RecycleAllNotes(trackManager);
-        }
+        // for (int i = 0; i < 4; i++)
+        // {
+        //     rhythmCore.transform.GetChild(i).GetComponent<Track>().RecycleAllNotes(trackManager);
+        // }
     }
     public IEnumerator ResetNoteSpawn(){
         yield return new WaitForSeconds(.5f);
