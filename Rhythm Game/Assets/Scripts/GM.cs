@@ -25,23 +25,32 @@ public class GM : MonoBehaviour
     {
         scene = SceneManager.GetActiveScene().name;
         
-        if (scene == "Startup")
-        {
-            SceneManager.LoadScene("PR");
-        }
+        // if (scene == "Startup")
+        // {
+        //     SceneManager.LoadScene("PR");
+        // }
         
         // rodar só uma vez
         ActiveTracks(scene);
 
-        if (Input.GetKeyDown(KeyCode.O) && sm.score == sm.scoreGoal){
+        if (Input.GetKeyDown(KeyCode.O) && sm.score == sm.scoreGoal && mm.ballState == 1){
             // chute
             sm.ResetScore();
             mm.MoveBall(2);
         }
-        else if (Input.GetKeyDown(KeyCode.P) && sm.score == sm.scoreGoal){
+        else if (Input.GetKeyDown(KeyCode.P) && sm.score == sm.scoreGoal && mm.ballState == 1){
             // passe
             sm.ResetScore();
             mm.MoveBall(1);
+        }
+        else if(mm.ballState == 0 && sm.score == sm.scoreGoal){
+            sm.ResetScore();
+            mm.MoveBall(1);
+        }
+        else if(mm.ballState == -1 && sm.score == sm.scoreGoal){
+            sm.ResetScore();
+            int prob = Random.Range(0, 100);
+            mm.MoveBall((prob < 50) ? 1 : 2);
         }
 
         if(changeScene != ""){
@@ -65,10 +74,10 @@ public class GM : MonoBehaviour
         // {
         //     SceneManager.LoadScene("RGK");
         // }
-        // else if (Input.GetKeyDown(KeyCode.I))
-        // {
-        //     SceneManager.LoadScene("TACKLE");
-        // }
+        else if (Input.GetKeyDown(KeyCode.I))
+        {
+            SceneManager.LoadScene("TACKLE");
+        }
         // else if (Input.GetKeyDown(KeyCode.G))
         // {
         //     SceneManager.LoadScene("PR");

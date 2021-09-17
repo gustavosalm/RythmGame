@@ -8,7 +8,7 @@ public class ScoreManager : MonoBehaviour
 {
     [SerializeField] private Image progressBar;
     public float score = 0, scoreGoal;
-    public bool destroyNotes = false;
+    public bool destroyNotes = false, getScore = true;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +22,8 @@ public class ScoreManager : MonoBehaviour
     }
 
     public void AddScore(string acc){
+        if(!getScore)
+            return;
         score += 10 * float.Parse(acc);
         score = Mathf.Clamp(score, 0, scoreGoal);
         progressBar.fillAmount = score / scoreGoal;
@@ -36,6 +38,12 @@ public class ScoreManager : MonoBehaviour
     public void ResetScore(){
         score = 0;
         progressBar.fillAmount = score / scoreGoal;
+        getScore = !getScore;
+    }
+
+    public IEnumerator ResetScoreValue(){
+        yield return new WaitForEndOfFrame();
+        score = 0;
     }
 
     public void DestroyNotes(Note note){
