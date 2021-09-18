@@ -25,6 +25,7 @@ public class GM : MonoBehaviour
     {
         scene = SceneManager.GetActiveScene().name;
         
+        // A cena certa é chamada no BallExit() no MapManager
         // if (scene == "Startup")
         // {
         //     SceneManager.LoadScene("PR");
@@ -43,16 +44,19 @@ public class GM : MonoBehaviour
             sm.ResetScore();
             mm.MoveBall(1);
         }
-        else if(mm.ballState == 0 && sm.score == sm.scoreGoal){
-            sm.ResetScore();
-            mm.MoveBall(1);
-        }
-        else if(mm.ballState == -1 && sm.score == sm.scoreGoal){
-            sm.ResetScore();
-            int prob = Random.Range(0, 100);
-            mm.MoveBall((prob < 50) ? 1 : 2);
-        }
+        // else if(mm.ballState == 0 && sm.score == sm.scoreGoal){
+        //     // quando ta em disputa de bola
+        //     sm.ResetScore();
+        //     mm.MoveBall(1);
+        // }
+        // else if(mm.ballState == -1 && sm.score == sm.scoreGoal){
+        //     // quanto ta com o rival
+        //     sm.ResetScore();
+        //     int prob = Random.Range(0, 100);
+        //     mm.MoveBall((prob < 50) ? 1 : 2);
+        // }
 
+        // Troca a cena no início do frame
         if(changeScene != ""){
             SceneManager.LoadScene(changeScene);
             changeScene = "";
@@ -74,10 +78,10 @@ public class GM : MonoBehaviour
         // {
         //     SceneManager.LoadScene("RGK");
         // }
-        else if (Input.GetKeyDown(KeyCode.I))
-        {
-            SceneManager.LoadScene("TACKLE");
-        }
+        // else if (Input.GetKeyDown(KeyCode.I))
+        // {
+        //     SceneManager.LoadScene("TACKLE");
+        // }
         // else if (Input.GetKeyDown(KeyCode.G))
         // {
         //     SceneManager.LoadScene("PR");
