@@ -34,7 +34,6 @@ public class ScoreManager : MonoBehaviour
     public void ResetScore(){
         score = 0;
         progressBar.fillAmount = score / scoreGoal;
-        getScore = !getScore;
     }
 
     // Reseta os pontos no final do frame pra evitar um certo erro
