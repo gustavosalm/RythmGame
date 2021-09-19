@@ -1719,6 +1719,7 @@ MonoBehaviour:
   scoreGoal: 100
   destroyNotes: 0
   getScore: 1
+  gols: 0000000000000000
 --- !u!114 &1899304782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1731,7 +1732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b28305b24e161045a1832e4a9875abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballPosition: 2
+  ballPosition: 3
   ball: {fileID: 1300573038}
   animPanel: {fileID: 1612512413}
   ballState: 1

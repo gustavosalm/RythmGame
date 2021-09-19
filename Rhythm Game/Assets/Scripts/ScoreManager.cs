@@ -10,6 +10,7 @@ public class ScoreManager : MonoBehaviour
     public float score = 0, scoreGoal; // ScoreGoal é o valor máximo da barra de progresso
     public bool destroyNotes = false, getScore = true;
     private List<GameObject> notesToDestroy = new List<GameObject>();
+    public int[] gols = new int[2];
 
     // Preencher barra de progresso
     public void AddScore(string acc){
