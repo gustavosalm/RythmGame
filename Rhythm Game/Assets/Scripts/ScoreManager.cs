@@ -9,16 +9,13 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private Image progressBar;
     public float score = 0, scoreGoal; // ScoreGoal é o valor máximo da barra de progresso
     public bool destroyNotes = false, getScore = true;
-
-    void Update(){
-        print(score);
-    }
+    private List<GameObject> notesToDestroy = new List<GameObject>();
 
     // Preencher barra de progresso
     public void AddScore(string acc){
         if(!getScore)
             return;
-        score += 10 * float.Parse(acc);
+        score += Mathf.Clamp(10 * float.Parse(acc), 0, 15);
         score = Mathf.Clamp(score, 0, scoreGoal);
         progressBar.fillAmount = score / scoreGoal;
     }
@@ -45,8 +42,17 @@ public class ScoreManager : MonoBehaviour
     // Impede as notas de aparecerem muito rápido ao trocar de cena
     public void DestroyNotes(Note note){
         if(destroyNotes){
+            notesToDestroy.Add(note.gameObject);
             note.gameObject.tag = "Untagged";
             note.gameObject.SetActive(false);
         }
+    }
+
+    public IEnumerator ClearNotes(){
+        yield return new WaitForSeconds(1);
+        for(int i = 0; i < notesToDestroy.Count; i++){
+            Destroy(notesToDestroy[i]);
+        }
+        notesToDestroy = new List<GameObject>();
     }
 }

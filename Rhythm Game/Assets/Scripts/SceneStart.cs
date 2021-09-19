@@ -74,5 +74,6 @@ public class SceneStart : MonoBehaviour
     public IEnumerator ResetNoteSpawn(){
         yield return new WaitForSeconds(.5f);
         gameManager.GetComponent<ScoreManager>().destroyNotes = false;
+        // StartCoroutine(gameManager.GetComponent<ScoreManager>().ClearNotes());
     }
 }

@@ -14,7 +14,7 @@ public class MapManager : MonoBehaviour{
     // cores pra eu saber o estado que a bola tá (apenas pra testes)
     private Color32[] states = {new Color32(255, 53, 0, 255), new Color32(213, 255, 0, 255), new Color32(0, 238, 255, 255)};
     // texto das animações que vão ser chamadas (vai ser substituído pelo nome da animação em si quando tiver)
-    private string[] anims = {"animação passe", "animação chute", "disputa de bola", "meu time recebe", "rival recebe", "goleiro chuta"};
+    private string[] anims = {"animação passe", "animação chute", "disputa de bola", "meu time recebe", "rival recebe", "goleiro chuta", "animação gol", "animação goleiro defende"};
     // nome das cenas para ficar mais fácil de chamar elas
     private string[] sceneNames = {"RR", "TACKLE", "PR", "RGK", "PGK"};
 
@@ -120,16 +120,16 @@ public class MapManager : MonoBehaviour{
             animsList.Add(anims[(ballState == 1) ? 3 : 4]);
             this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
         }
-        else /*if(prob < 60)*/{
+        else if(prob < 60){
             // Disputa de bola
             ballState = 0;
             ball.GetComponent<Image>().color = states[ballState + 1];
             animsList.Add(anims[2]);
             this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
         }
-        // else{
-        //     // Tentando gol
-        // }
+        else{
+            // Tentando gol
+        }
 
         // this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
 
