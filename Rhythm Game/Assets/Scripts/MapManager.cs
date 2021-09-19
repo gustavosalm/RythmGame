@@ -50,7 +50,7 @@ public class MapManager : MonoBehaviour{
             ball.GetComponent<Image>().color = states[ballState + 1];
             animsList.Add(anims[(ballState == 1) ? 3 : 4]);
         }
-        else if((movement == 1) ? prob < 30 + barMod : prob < 50 + barMod){
+        else if((movement == 1) ? prob < 10 + barMod : prob < 30 + barMod){
             // Chance da bola trocar de time
             ballState *= -1;
             ball.GetComponent<Image>().color = states[ballState + 1];
@@ -99,7 +99,7 @@ public class MapManager : MonoBehaviour{
         else if(ballState == -1){
             sm.ResetScore();
             int prob = Random.Range(0, 100);
-            MoveBall((prob < 50) ? 1 : 2);
+            MoveBall((prob < 50 && ballPosition > 1) ? 1 : 2);
         }
         else{
             List<string> animsList = new List<string>();
