@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RhythmGameStarter;
 
 public class MapManager : MonoBehaviour{
+    [SerializeField] private GameObject ball, animPanel; // UI da bola no campo e alerta de animação
+    [SerializeField] private SongManager songManager;
     private ScoreManager sm;
     public int ballPosition = 3; // 0, 1, 2, 3, 4, 5, 6
-    [SerializeField] private GameObject ball, animPanel; // UI da bola no campo e alerta de animação
     public int ballState = 1; // -1 rival | 0 disputa de bola | 1 seu time
     private Vector3 centerPos; // meio de campo
     private float deslocamento; // o tanto que a bola anda por passe
@@ -176,6 +178,14 @@ public class MapManager : MonoBehaviour{
         StartCoroutine(PlayAnim(animsList));
     }
 
+    public void SegundoTempo(){
+        StartCoroutine(PlayAnim(new List<string>() {"Segundo tempo"}));
+        ball.GetComponent<RectTransform>().localPosition = centerPos;
+        ballPosition = 3;
+        ballState = 1;
+        songManager.PlaySong();
+        BallExit();
+    }
     // Quem começa com a bola 50/50
     void BallExit(){
         int prob = Random.Range(0, 100);

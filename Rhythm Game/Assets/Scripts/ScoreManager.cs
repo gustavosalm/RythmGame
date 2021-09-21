@@ -7,10 +7,23 @@ using RhythmGameStarter;
 public class ScoreManager : MonoBehaviour
 {
     [SerializeField] private Image progressBar;
+    [SerializeField] private Text timer;
+    public int currentTime = 0;
+    public float startTime = 0;
     public float score = 0, scoreGoal; // ScoreGoal é o valor máximo da barra de progresso
     public bool destroyNotes = false, getScore = true;
     public int[] gols = new int[2];
     // private List<GameObject> notesToDestroy = new List<GameObject>();
+
+    void Update() {
+        currentTime = Mathf.FloorToInt((Time.time - startTime) / 2.2f);
+        timer.text = $"{currentTime:00}:00";
+        if(currentTime == 48){
+            currentTime = 0;
+            this.GetComponent<MapManager>().SegundoTempo();
+            startTime = Time.time + 1;
+        }
+    }
 
     // Preencher barra de progresso
     public void AddScore(string acc){
