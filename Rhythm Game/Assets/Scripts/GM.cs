@@ -34,15 +34,15 @@ public class GM : MonoBehaviour
         // rodar só uma vez
         ActiveTracks(scene);
 
-        if (Input.GetKeyDown(KeyCode.O) && /* sm.score == sm.scoreGoal && */ mm.ballState == 1){
+        if (Input.GetKeyDown(KeyCode.O) && sm.score >= (sm.scoreGoal * 0.2f) && mm.ballState == 1){
             // chute
-            sm.ResetScore();
+            sm.UseScore(sm.scoreGoal * 0.2f);
             sm.getScore = false;
             mm.MoveBall(2);
         }
-        else if (Input.GetKeyDown(KeyCode.P) && /* sm.score == sm.scoreGoal && */ mm.ballState == 1){
+        else if (Input.GetKeyDown(KeyCode.P) && sm.score >= (sm.scoreGoal * 0.4f) && mm.ballState == 1){
             // passe
-            sm.ResetScore();
+            sm.UseScore(sm.scoreGoal * 0.4f);
             sm.getScore = false;
             mm.MoveBall(1);
         }

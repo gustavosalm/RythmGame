@@ -179,13 +179,16 @@ public class MapManager : MonoBehaviour{
     }
 
     public void SegundoTempo(){
+        StopCoroutine("PlayAnim");
         StartCoroutine(PlayAnim(new List<string>() {"Segundo tempo"}));
         ball.GetComponent<RectTransform>().localPosition = centerPos;
         ballPosition = 3;
         ballState = 1;
         songManager.PlaySong();
+        deslocamento *= -1;
         BallExit();
     }
+
     // Quem começa com a bola 50/50
     void BallExit(){
         int prob = Random.Range(0, 100);

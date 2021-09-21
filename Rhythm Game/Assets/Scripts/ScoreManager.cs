@@ -11,18 +11,24 @@ public class ScoreManager : MonoBehaviour
     public int currentTime = 0;
     public float startTime = 0;
     public float score = 0, scoreGoal; // ScoreGoal é o valor máximo da barra de progresso
-    public bool destroyNotes = false, getScore = true;
+    public bool destroyNotes = false, getScore = true, songFinished = false, segundoTempo = false;
     public int[] gols = new int[2];
     // private List<GameObject> notesToDestroy = new List<GameObject>();
 
     void Update() {
-        currentTime = Mathf.FloorToInt((Time.time - startTime) / 2.2f);
+        currentTime = Mathf.FloorToInt((Time.fixedTime - startTime) / 2.27f);
         timer.text = $"{currentTime:00}:00";
-        if(currentTime == 48){
+        if(songFinished && !segundoTempo){
+            segundoTempo = true;
             currentTime = 0;
+            songFinished = false;
             this.GetComponent<MapManager>().SegundoTempo();
-            startTime = Time.time + 1;
+            startTime = Time.fixedTime + 1;
         }
+    }
+
+    public void SongFinished(){
+        songFinished = true;
     }
 
     // Preencher barra de progresso
@@ -37,6 +43,12 @@ public class ScoreManager : MonoBehaviour
     // Reduzir barra de progresso
     public void ReduceScore(string scoreMissed){
         score -= 5;
+        score = Mathf.Clamp(score, 0, scoreGoal);
+        progressBar.fillAmount = score / scoreGoal;
+    }
+
+    public void UseScore(float valueUsed){
+        score -= valueUsed;
         score = Mathf.Clamp(score, 0, scoreGoal);
         progressBar.fillAmount = score / scoreGoal;
     }
