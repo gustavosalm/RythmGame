@@ -12,6 +12,7 @@ namespace RhythmGameStarter
         [Title("Events")]
         [CollapsedEvent] public UnityEvent OnInteractionBegin;
         [CollapsedEvent] public UnityEvent OnInteractionEnd;
+        [CollapsedEvent] public UnityEvent ClickingOnEmpty;
 
         [Title("Effect")]
         public NoteEffect sustainEffect;
@@ -345,6 +346,9 @@ namespace RhythmGameStarter
                         touchDownNotePosition = note.transform.position;
                         break;
                 }
+            }
+            else {
+                ClickingOnEmpty.Invoke();
             }
         }
 

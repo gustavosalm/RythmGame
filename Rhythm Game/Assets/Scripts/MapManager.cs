@@ -11,7 +11,8 @@ public class MapManager : MonoBehaviour{
     public int ballPosition = 3; // 0, 1, 2, 3, 4, 5, 6
     public int ballState = 1; // -1 rival | 0 disputa de bola | 1 seu time
     private Vector3 centerPos; // meio de campo
-    private float deslocamento; // o tanto que a bola anda por passe
+    private float deslocamento, gol; // o tanto que a bola anda por passe
+    public float ballSpeed;
 
     // cores pra eu saber o estado que a bola tá (apenas pra testes)
     private Color32[] states = {new Color32(255, 53, 0, 255), new Color32(213, 255, 0, 255), new Color32(0, 238, 255, 255)};
@@ -23,14 +24,24 @@ public class MapManager : MonoBehaviour{
     void Start(){
         centerPos = ball.GetComponent<RectTransform>().localPosition;
         deslocamento = ball.transform.parent.GetComponent<RectTransform>().sizeDelta.x / 7;
+        gol = ball.transform.parent.GetComponent<RectTransform>().sizeDelta.x / 2;
         sm = this.GetComponent<ScoreManager>();
 
         BallExit();
     }
 
+    void Update(){
+        bool noGol = (ballState == 1) ? ballPosition > 5 : ballPosition < 1;
+        if(ballState <= 1 && !noGol)
+            ball.transform.Translate(Vector3.right * ballSpeed * ballState * Time.deltaTime);
+    }
+
     public void MoveBall(int movement){
+        if(ballState <= 1)
+            ballPosition += ballState;
+
         // Chute direcionado ao gol
-        if(ballState != 0 && movement == 2 && ((ballState == 1) ? ballPosition >= 4 : ballPosition <= 2)){
+        if(ballState != 0 && movement == 2 && ((ballState == 1) ? ballPosition > 4 : ballPosition < 2)){
             ChuteAoGol();
             return;
         }
@@ -44,7 +55,7 @@ public class MapManager : MonoBehaviour{
 
         // Probabilidade e modificador baseado em quão cheia está a barra
         int prob = Random.Range(0, 100);
-        int barMod = (int) (30 * ((ballState == 1) ? (1 - (sm.score / sm.scoreGoal)) : (sm.score / sm.scoreGoal)));
+        int barMod = (int) (30 * ((ballState == 1) ? 0 : (sm.score / sm.scoreGoal)));
         print(barMod);
         if(ballState == 0){
             // Acabar a disputa de bola
@@ -92,6 +103,7 @@ public class MapManager : MonoBehaviour{
     }
 
     public IEnumerator AutoAction(){
+        sm.ResetScore();
         int interval = Random.Range(8, 12);
         yield return new WaitForSeconds(interval+2);
         if(ballState == 0){
@@ -180,12 +192,15 @@ public class MapManager : MonoBehaviour{
 
     public void SegundoTempo(){
         StopCoroutine("PlayAnim");
+        StopCoroutine("AutoAction");
+        sm.destroyNotes = false;
         StartCoroutine(PlayAnim(new List<string>() {"Segundo tempo"}));
         ball.GetComponent<RectTransform>().localPosition = centerPos;
         ballPosition = 3;
         ballState = 1;
         songManager.PlaySong();
         deslocamento *= -1;
+        ballSpeed *= -1;
         BallExit();
     }
 

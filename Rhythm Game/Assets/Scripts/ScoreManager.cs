@@ -42,6 +42,8 @@ public class ScoreManager : MonoBehaviour
 
     // Reduzir barra de progresso
     public void ReduceScore(string scoreMissed){
+        if(!getScore)
+            return;
         score -= 5;
         score = Mathf.Clamp(score, 0, scoreGoal);
         progressBar.fillAmount = score / scoreGoal;
@@ -59,17 +61,11 @@ public class ScoreManager : MonoBehaviour
         progressBar.fillAmount = score / scoreGoal;
     }
 
-    // Reseta os pontos no final do frame pra evitar um certo erro
-    public IEnumerator ResetScoreValue(){
-        yield return new WaitForEndOfFrame();
-        score = 0;
-    }
-
     // Impede as notas de aparecerem muito rápido ao trocar de cena
     public void DestroyNotes(Note note){
         if(destroyNotes){
             // notesToDestroy.Add(note.gameObject);
-            note.gameObject.tag = "Untagged";
+            // note.gameObject.tag = "Untagged";
             note.gameObject.SetActive(false);
         }
     }
