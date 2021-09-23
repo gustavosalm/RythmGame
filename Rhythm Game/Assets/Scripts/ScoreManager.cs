@@ -8,12 +8,17 @@ public class ScoreManager : MonoBehaviour
 {
     [SerializeField] private Image progressBar;
     [SerializeField] private Text timer;
+    private MapManager mm;
     public int currentTime = 0;
     public float startTime = 0;
     public float score = 0, scoreGoal; // ScoreGoal é o valor máximo da barra de progresso
     public bool destroyNotes = false, getScore = true, songFinished = false, segundoTempo = false;
     public int[] gols = new int[2];
     // private List<GameObject> notesToDestroy = new List<GameObject>();
+
+    void Start() {
+        mm = this.GetComponent<MapManager>();
+    }
 
     void Update() {
         currentTime = Mathf.FloorToInt((Time.fixedTime - startTime) / 2.27f);
@@ -22,12 +27,17 @@ public class ScoreManager : MonoBehaviour
             segundoTempo = true;
             currentTime = 0;
             songFinished = false;
-            this.GetComponent<MapManager>().SegundoTempo();
+            mm.SegundoTempo();
             startTime = Time.fixedTime + 1;
         }
     }
 
     public void SongFinished(){
+        if(songFinished){
+            mm.animPanel.SetActive(true);
+            mm.animPanel.transform.GetChild(0).GetComponent<Text>().text = "Partida acabou";
+            mm.StopCoroutine("AutoAction");
+        }
         songFinished = true;
     }
 

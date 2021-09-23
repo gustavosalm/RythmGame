@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using RhythmGameStarter;
 
 public class MapManager : MonoBehaviour{
-    [SerializeField] private GameObject ball, animPanel; // UI da bola no campo e alerta de animação
+    [SerializeField] public GameObject ball, animPanel; // UI da bola no campo e alerta de animação
     [SerializeField] private SongManager songManager;
     private ScoreManager sm;
     public int ballPosition = 3; // 0, 1, 2, 3, 4, 5, 6
@@ -55,32 +55,48 @@ public class MapManager : MonoBehaviour{
 
         // Probabilidade e modificador baseado em quão cheia está a barra
         int prob = Random.Range(0, 100);
-        int barMod = (int) (30 * ((ballState == 1) ? 0 : (sm.score / sm.scoreGoal)));
+        float barMod = sm.score / sm.scoreGoal;
         print(barMod);
         if(ballState == 0){
             // Acabar a disputa de bola
-            ballState = (prob < 50 + barMod) ? 1 : -1;
+            ballState = (prob < (int)(barMod * 100)) ? 1 : -1;
             ball.GetComponent<Image>().color = states[ballState + 1];
             animsList.Add(anims[(ballState == 1) ? 3 : 4]);
+            sm.ResetScore();
         }
-        else if((movement == 1) ? prob < 10 + barMod : prob < 30 + barMod){
-            // Chance da bola trocar de time
-            ballState *= -1;
-            ball.GetComponent<Image>().color = states[ballState + 1];
-            animsList.Add(anims[(movement == 1) ? 0 : 1]);
-            animsList.Add(anims[(ballState == 1) ? 3 : 4]);
-        }
-        else if((movement == 1) ? prob < 40 + barMod : prob < 50 + barMod){
-            // Chance de virar uma disputa de bola
-            ballState = 0;
-            ball.GetComponent<Image>().color = states[ballState + 1];
-            animsList.Add(anims[(movement == 1) ? 0 : 1]);
-            animsList.Add(anims[2]);
-        }
-        else {
-            // A bola continua no mesmo time
-            animsList.Add(anims[(movement == 1) ? 0 : 1]);
-            animsList.Add(anims[(ballState == 1) ? 3 : 4]);
+        else{
+            int probDiff;
+            int secProbDiff;
+            int initialState = ballState;
+            if(movement == 1){
+                probDiff = (int)((ballState == 1) ? 60 - (barMod * 40) : 10 + (barMod * 40));
+                secProbDiff = (int)((ballState == 1) ? 40 - (barMod * 30) :  (barMod * 25));
+            }
+            else{
+                probDiff = (int)((ballState == 1) ? 75 - (barMod * 60) : (barMod * 60));
+                secProbDiff = (int)((ballState == 1) ? 35 - (20 * barMod) :  10 + (barMod * 20));
+            }
+            if(prob < probDiff){
+                // Chance da bola trocar de time
+                ballState *= -1;
+                ball.GetComponent<Image>().color = states[ballState + 1];
+                animsList.Add(anims[(movement == 1) ? 0 : 1]);
+                animsList.Add(anims[(ballState == 1) ? 3 : 4]);
+            }
+            else if(prob < secProbDiff + probDiff){
+                // Chance de virar uma disputa de bola
+                ballState = 0;
+                ball.GetComponent<Image>().color = states[ballState + 1];
+                animsList.Add(anims[(movement == 1) ? 0 : 1]);
+                animsList.Add(anims[2]);
+            }
+            else {
+                // A bola continua no mesmo time
+                animsList.Add(anims[(movement == 1) ? 0 : 1]);
+                animsList.Add(anims[(ballState == 1) ? 3 : 4]);
+            }
+            if(initialState == -1)
+                sm.ResetScore();
         }
 
         // Se a bola não estiver com o jogador, o código sorteia um tempo até acontecer algo
@@ -107,19 +123,18 @@ public class MapManager : MonoBehaviour{
         int interval = Random.Range(8, 12);
         yield return new WaitForSeconds(interval+2);
         if(ballState == 0){
-            sm.ResetScore();
             MoveBall(1);
         }
         else if(ballState == -1){
-            sm.ResetScore();
             int prob = Random.Range(0, 100);
             MoveBall((prob < 50 && ballPosition > 1) ? 1 : 2);
         }
         else{
             List<string> animsList = new List<string>();
             int prob = Random.Range(0, 100);
-            int barMod = (int) (30 * (1 - (sm.score / sm.scoreGoal)) * ((ballState == 2) ? 1 : -1));
-            if(prob < 75 - barMod){
+            float barMod = sm.score / sm.scoreGoal;
+            int probDiff = (int)((ballState == 2) ? 100 * barMod : 100 - (barMod * 100));
+            if(prob < probDiff){
                 // gol
                 animsList.Add(anims[6]);
                 animsList.Add(anims[8]);
@@ -136,8 +151,7 @@ public class MapManager : MonoBehaviour{
                 ballState = (ballState == 2) ? 1 : -1;
                 ball.GetComponent<RectTransform>().localPosition = centerPos + new Vector3(deslocamento * 1 * ballState, 0, 0);
                 ballPosition = 3 + ballState;
-                prob = Random.Range(0, 100);
-                ballState *= (prob < 60) ? -1 : 1;
+                ballState *= (prob < probDiff + 25) ? 1 : -1;
                 ball.GetComponent<Image>().color = states[ballState + 1];
                 animsList.Add(anims[7]);
                 animsList.Add(anims[5]);
@@ -146,7 +160,6 @@ public class MapManager : MonoBehaviour{
             }
             if(ballState != 1)
                     StartCoroutine("AutoAction");
-            sm.ResetScore();
             StartCoroutine(PlayAnim(animsList));
         }
     }
@@ -157,7 +170,24 @@ public class MapManager : MonoBehaviour{
         animsList.Add(anims[1]);
 
         int prob = Random.Range(0, 100);
-        if(prob < 40){
+        float barMod = sm.score / sm.scoreGoal;
+        int probDiff = (int)((ballState == 1) ? 70 * barMod : 70 - (barMod * 60));
+        int secProbDiff = (int)((ballState == 1) ? 35 - (barMod * 20) : 10 + (barMod * 20));
+        if(prob < probDiff){
+            // Tentando gol
+            ball.GetComponent<RectTransform>().localPosition = centerPos + new Vector3(deslocamento * 3 * ballState, 0, 0);
+            ballPosition = 3 + (3 * ballState);
+            ballState = (ballState == 1) ? 2 : 3;
+            this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
+        }
+        else if(prob < probDiff + secProbDiff){
+            // Disputa de bola
+            ballState = 0;
+            ball.GetComponent<Image>().color = states[ballState + 1];
+            animsList.Add(anims[2]);
+            this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
+        }
+        else{
             // Chute pra fora
             ball.GetComponent<RectTransform>().localPosition = centerPos + new Vector3(deslocamento * 1 * ballState, 0, 0);
             ballPosition = 3 + ballState;
@@ -166,20 +196,6 @@ public class MapManager : MonoBehaviour{
             ball.GetComponent<Image>().color = states[ballState + 1];
             animsList.Add(anims[5]);
             animsList.Add(anims[(ballState == 1) ? 3 : 4]);
-            this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
-        }
-        else if(prob < 60){
-            // Disputa de bola
-            ballState = 0;
-            ball.GetComponent<Image>().color = states[ballState + 1];
-            animsList.Add(anims[2]);
-            this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
-        }
-        else{
-            // Tentando gol
-            ball.GetComponent<RectTransform>().localPosition = centerPos + new Vector3(deslocamento * 3 * ballState, 0, 0);
-            ballPosition = 3 + (3 * ballState);
-            ballState = (ballState == 1) ? 2 : 3;
             this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
         }
 
