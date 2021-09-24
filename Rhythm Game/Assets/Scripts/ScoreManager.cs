@@ -6,14 +6,17 @@ using RhythmGameStarter;
 
 public class ScoreManager : MonoBehaviour
 {
-    [SerializeField] private Image progressBar;
-    [SerializeField] private Text timer;
     private MapManager mm;
-    public int currentTime = 0;
-    public float startTime = 0;
-    public float score = 0, scoreGoal; // ScoreGoal é o valor máximo da barra de progresso
-    public bool destroyNotes = false, getScore = true, songFinished = false, segundoTempo = false;
-    public int[] gols = new int[2];
+    [SerializeField] private Image progressBar;
+    [SerializeField] private Text timer, placar;
+    [SerializeField] private float minPerNote, maxPerNote;
+    public float scoreGoal;
+
+    [HideInInspector] public int currentTime = 0, seconds = 0;
+    [HideInInspector] public float startTime = 0;
+    [HideInInspector] public float score = 0; // ScoreGoal é o valor máximo da barra de progresso
+    [HideInInspector] public bool destroyNotes = false, getScore = true, songFinished = false, segundoTempo = false;
+    [HideInInspector] public int[] gols = new int[2];
     // private List<GameObject> notesToDestroy = new List<GameObject>();
 
     void Start() {
@@ -21,8 +24,13 @@ public class ScoreManager : MonoBehaviour
     }
 
     void Update() {
-        currentTime = Mathf.FloorToInt((Time.fixedTime - startTime) / 2.27f);
-        timer.text = $"{currentTime:00}:00";
+        float time = (Time.fixedTime - startTime) / 2.27f;
+        currentTime = Mathf.FloorToInt(time);
+        seconds = Mathf.FloorToInt((time - currentTime) * 6);
+        if(seconds >= 60){
+            seconds = 0;
+        }
+        timer.text = $"{currentTime:00}:{seconds:0}0";
         if(songFinished && !segundoTempo){
             segundoTempo = true;
             currentTime = 0;
@@ -41,11 +49,15 @@ public class ScoreManager : MonoBehaviour
         songFinished = true;
     }
 
+    public void AlterarPlacar(){
+        placar.text = $"{gols[0]} x {gols[1]}";
+    }
+
     // Preencher barra de progresso
     public void AddScore(string acc){
         if(!getScore)
             return;
-        score += Mathf.Clamp(10 * float.Parse(acc), 7, 15);
+        score += Mathf.Clamp(10 * float.Parse(acc), minPerNote, maxPerNote);
         score = Mathf.Clamp(score, 0, scoreGoal);
         progressBar.fillAmount = score / scoreGoal;
     }
