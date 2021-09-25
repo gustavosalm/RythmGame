@@ -22,6 +22,38 @@ public class MapManager : MonoBehaviour{
     // nome das cenas para ficar mais fácil de chamar elas
     private string[] sceneNames = {"RR", "TACKLE", "PR", "RGK", "PGK"};
 
+    [Header("Probabilidades PR Passe")]
+    public int rivalRecepePasse0;
+    public int rivalRecepePasse100;
+    public int disputaPasse0;
+    public int disputaPasse100;
+
+    [Header("Probabilidades PR Chute Longe")]
+    public int rivalRecebeChute0;
+    public int rivalRecebeChute100;
+    public int disputaChute0;
+    public int disputaChute100;
+
+    [Header("Probabilidades PR Chute Perto")]
+    public int PRChuteAoGol0;
+    public int PRChuteAoGol100;
+
+    [Header("Probabilidades RR Passe")]
+    public int playerRecepePasse0;
+    public int playerRecepePasse100;
+    public int RRDisputaPasse0;
+    public int RRDisputaPasse100;
+
+    [Header("Probabilidades RR Chute Longe")]
+    public int playerRecebeChute0;
+    public int playerRecebeChute100;
+    public int RRDisputaChute0;
+    public int RRDisputaChute100;
+
+    [Header("Probabilidades RR Chute Perto")]
+    public int RRChuteAoGol0;
+    public int RRChuteAoGol100;
+
     void Start(){
         centerPos = ball.GetComponent<RectTransform>().localPosition;
         deslocamento = ball.transform.parent.GetComponent<RectTransform>().sizeDelta.x / 7;
@@ -71,12 +103,12 @@ public class MapManager : MonoBehaviour{
             int secProbDiff;
             int initialState = ballState;
             if(movement == 1){
-                probDiff = (int)((ballState == 1) ? 60 - (barMod * 40) : 10 + (barMod * 40));
-                secProbDiff = (int)((ballState == 1) ? 40 - (barMod * 30) :  (barMod * 25));
+                probDiff = (int)((ballState == 1) ? rivalRecepePasse0 - (barMod * (rivalRecepePasse0 - rivalRecepePasse100)) : playerRecepePasse0 + (barMod * (playerRecepePasse100 - playerRecepePasse0)));
+                secProbDiff = (int)((ballState == 1) ? disputaPasse0 - (barMod * (disputaPasse0 - disputaPasse100)) : RRDisputaPasse100 - (barMod * (RRDisputaPasse100 - RRDisputaPasse0)));
             }
             else{
-                probDiff = (int)((ballState == 1) ? 75 - (barMod * 60) : (barMod * 60));
-                secProbDiff = (int)((ballState == 1) ? 35 - (20 * barMod) :  10 + (barMod * 20));
+                probDiff = (int)((ballState == 1) ? rivalRecebeChute0 - (barMod * (rivalRecebeChute0 - rivalRecebeChute100)) : playerRecebeChute0 + (barMod * (playerRecebeChute100 - playerRecebeChute0)));
+                secProbDiff = (int)((ballState == 1) ? disputaChute0 - (barMod * (disputaChute0 - disputaChute100)) : RRDisputaChute100 + (barMod * (RRDisputaChute100 - RRDisputaChute0)));
             }
             if(prob < probDiff){
                 // Chance da bola trocar de time
@@ -191,10 +223,10 @@ public class MapManager : MonoBehaviour{
 
         int prob = Random.Range(0, 100);
         float barMod = sm.score / sm.scoreGoal;
-        int probDiff = (int)((ballState == 1) ? 70 * barMod : 70 - (barMod * 60));
-        int secProbDiff = (int)((ballState == 1) ? 35 - (barMod * 20) : 10 + (barMod * 20));
+        int probDiff = (int)((ballState == 1) ? PRChuteAoGol0 + (barMod * (PRChuteAoGol100 - PRChuteAoGol0)) : RRChuteAoGol0 - (barMod * (PRChuteAoGol0 - PRChuteAoGol100)));
+        int secProbDiff = (int)((ballState == 1) ? disputaChute0 - (barMod * (disputaChute0 - disputaChute100)) : RRDisputaChute100 + (barMod * (RRDisputaChute100 - RRDisputaChute0)));
         if(prob < probDiff){
-            // Tentando gol
+            // Chute ao gol
             ball.GetComponent<RectTransform>().localPosition = centerPos + new Vector3(deslocamento * 3 * ballState, 0, 0);
             ballPosition = 3 + (3 * ballState);
             ballState = (ballState == 1) ? 2 : 3;

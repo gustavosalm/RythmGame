@@ -2025,6 +2025,26 @@ MonoBehaviour:
   ballSpeed: 3
   ballPosition: 3
   ballState: 1
+  rivalRecepePasse0: 60
+  rivalRecepePasse100: 20
+  disputaPasse0: 30
+  disputaPasse100: 10
+  rivalRecebeChute0: 75
+  rivalRecebeChute100: 15
+  disputaChute0: 35
+  disputaChute100: 15
+  PRChuteAoGol0: 0
+  PRChuteAoGol100: 70
+  playerRecepePasse0: 10
+  playerRecepePasse100: 50
+  RRDisputaPasse0: 10
+  RRDisputaPasse100: 30
+  playerRecebeChute0: 0
+  playerRecebeChute100: 60
+  RRDisputaChute0: 10
+  RRDisputaChute100: 30
+  RRChuteAoGol0: 90
+  RRChuteAoGol100: 10
 --- !u!1 &1934618543
 GameObject:
   m_ObjectHideFlags: 0
