@@ -14,6 +14,7 @@ public class MapManager : MonoBehaviour{
     [HideInInspector] public int ballState = 1; // -1 rival | 0 disputa de bola | 1 seu time
     private Vector3 centerPos; // meio de campo
     private float deslocamento, gol; // o tanto que a bola anda por passe
+    private int enemyTaking = 1;
 
     // cores pra eu saber o estado que a bola tá (apenas pra testes)
     private Color32[] states = {new Color32(255, 53, 0, 255), new Color32(213, 255, 0, 255), new Color32(0, 238, 255, 255)};
@@ -54,6 +55,22 @@ public class MapManager : MonoBehaviour{
     public int RRChuteAoGol0;
     public int RRChuteAoGol100;
 
+    [Header("Probabilidades Tackle")]
+    public int playerRecebeTackle0;
+    public int playerRecebeTackle100;
+
+    [Header("Probabilidades PGK")]
+    public int rivalGol0;
+    public int rivalGol100;
+    public int rivalRecebeDefesa0;
+    public int rivalRecebeDefesa100;
+
+    [Header("Probabilidades RGK")]
+    public int playerGol0;
+    public int playerGol100;
+    public int playerRecebeDefesa0;
+    public int playerRecebeDefesa100;
+
     void Start(){
         centerPos = ball.GetComponent<RectTransform>().localPosition;
         deslocamento = ball.transform.parent.GetComponent<RectTransform>().sizeDelta.x / 7;
@@ -71,6 +88,7 @@ public class MapManager : MonoBehaviour{
 
     public void MoveBall(int movement){
         StopCoroutine("EnemyTake");
+        enemyTaking = 1;
         if(ballState <= 1)
             ballPosition += ballState;
 
@@ -81,8 +99,9 @@ public class MapManager : MonoBehaviour{
         }
 
         // Move a bola na direção do gol
-        ball.GetComponent<RectTransform>().localPosition += new Vector3(deslocamento * movement * ballState, 0, 0);
-        ballPosition += movement * ballState;
+        int limitador = ((ballState == 1) ? ballPosition >= 5 : ballPosition <= 1) ? 0 : 1;
+        ball.GetComponent<RectTransform>().localPosition += new Vector3(deslocamento * movement *  limitador * ballState, 0, 0);
+        ballPosition += movement * ballState * limitador;
 
         // Lista de animações que vão rodar
         List<string> animsList = new List<string>();
@@ -93,7 +112,8 @@ public class MapManager : MonoBehaviour{
         print(barMod);
         if(ballState == 0){
             // Acabar a disputa de bola
-            ballState = (prob < (int)(barMod * 100)) ? 1 : -1;
+            int tackleMod = (int)(playerRecebeTackle0 + (barMod * (playerRecebeTackle100 - playerRecebeTackle0)));
+            ballState = (prob < tackleMod) ? 1 : -1;
             ball.GetComponent<Image>().color = states[ballState + 1];
             animsList.Add(anims[(ballState == 1) ? 3 : 4]);
             sm.ResetScore();
@@ -169,7 +189,7 @@ public class MapManager : MonoBehaviour{
             List<string> animsList = new List<string>();
             int prob = Random.Range(0, 100);
             float barMod = sm.score / sm.scoreGoal;
-            int probDiff = (int)((ballState == 2) ? 100 * barMod : 100 - (barMod * 100));
+            int probDiff = (int)((ballState == 2) ? playerGol0 + (barMod * (playerGol100 - playerGol0)) : rivalGol0 - (barMod * (rivalGol0 - rivalGol100)));
             if(prob < probDiff){
                 // gol
                 animsList.Add(anims[6]);
@@ -187,15 +207,19 @@ public class MapManager : MonoBehaviour{
                 ballState = (ballState == 2) ? 1 : -1;
                 ball.GetComponent<RectTransform>().localPosition = centerPos + new Vector3(deslocamento * 1 * ballState, 0, 0);
                 ballPosition = 3 + ballState;
-                ballState *= (prob < probDiff + 25) ? 1 : -1;
+                int probMod = (int)((ballState == 1) ? playerRecebeDefesa0 + (barMod * (playerRecebeDefesa100 - playerRecebeDefesa0)) : rivalRecebeDefesa0 - (barMod * (rivalRecebeDefesa0 - rivalRecebeDefesa100)));
+                ballState *= (prob < probDiff + probMod) ? 1 : -1;
                 ball.GetComponent<Image>().color = states[ballState + 1];
                 animsList.Add(anims[7]);
                 animsList.Add(anims[5]);
                 animsList.Add(anims[(ballState == 1) ? 3 : 4]);
                 this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
             }
+            sm.ResetScore();
             if(ballState != 1)
-                    StartCoroutine("AutoAction");
+                StartCoroutine("AutoAction");
+            else if(ballState == 1)
+                StartCoroutine("EnemyTake");
             StartCoroutine(PlayAnim(animsList));
         }
     }
@@ -205,7 +229,7 @@ public class MapManager : MonoBehaviour{
         yield return new WaitForSeconds(enemyTakeTime);
         if(ballState != 1)
             yield break;
-        sm.UseScore((enemyTakeAmount / 100) * sm.scoreGoal);
+        sm.UseScore((enemyTakeAmount * enemyTaking / 100) * sm.scoreGoal);
         if(sm.score == 0){
             ballState = -1;
             ball.GetComponent<Image>().color = states[ballState + 1];
@@ -213,9 +237,22 @@ public class MapManager : MonoBehaviour{
             StartCoroutine("AutoAction");
             this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
             StartCoroutine(PlayAnim(new List<string>() {"Rival rouba a bola"}));
+            yield break;
         }
+        enemyTaking++;
+        StartCoroutine("EnemyTake");
     }
 
+    public void EnemyInstaTake(){
+        if(ballState != 1)
+            return;
+
+        ballState = -1;
+        ball.GetComponent<Image>().color = states[ballState + 1];
+        StartCoroutine("AutoAction");
+        this.GetComponent<GM>().changeScene = sceneNames[ballState + 1];
+        StartCoroutine(PlayAnim(new List<string>() {"Player perdeu a bola"}));
+    }
     // Chute perto do gol
     public void ChuteAoGol(){
         List<string> animsList = new List<string>();
@@ -253,6 +290,8 @@ public class MapManager : MonoBehaviour{
 
         if(ballState != 1)
             StartCoroutine("AutoAction");
+        else if(ballState == 1)
+            StartCoroutine("EnemyTake");
 
         sm.ResetScore();
         StartCoroutine(PlayAnim(animsList));

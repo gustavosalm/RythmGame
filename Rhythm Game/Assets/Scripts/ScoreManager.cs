@@ -10,7 +10,8 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private Image progressBar;
     [SerializeField] private Text timer, placar;
     [SerializeField] private float minPerNote, maxPerNote;
-    public float scoreGoal;
+    public float scoreGoal, passeCost, chuteCost;
+    private Coroutine missBall = null;
 
     [HideInInspector] public int currentTime = 0, seconds = 0;
     [HideInInspector] public float startTime = 0;
@@ -21,6 +22,10 @@ public class ScoreManager : MonoBehaviour
 
     void Start() {
         mm = this.GetComponent<MapManager>();
+        startTime = Time.fixedTime;
+        AlterarPlacar();
+        progressBar.fillAmount = score / scoreGoal;
+        timer.text = "00:00";
     }
 
     void Update() {
@@ -37,14 +42,24 @@ public class ScoreManager : MonoBehaviour
             songFinished = false;
             mm.SegundoTempo();
             startTime = Time.fixedTime + 1;
+            if(missBall != null){
+                StopCoroutine(missBall);
+                missBall = null;
+            }
         }
     }
 
     public void SongFinished(){
-        if(songFinished){
+        if(segundoTempo){
             mm.animPanel.SetActive(true);
-            mm.animPanel.transform.GetChild(0).GetComponent<Text>().text = "Partida acabou";
+            mm.animPanel.transform.GetChild(0).GetComponent<Text>().text = "fim de jogo\naperte y para reiniciar.";
+            gameObject.GetComponent<GM>().gameRestart = true;
             mm.StopCoroutine("AutoAction");
+            mm.StopCoroutine("EnemyTake");
+            if(missBall != null){
+                StopCoroutine(missBall);
+                missBall = null;
+            }
         }
         songFinished = true;
     }
@@ -60,6 +75,10 @@ public class ScoreManager : MonoBehaviour
         score += Mathf.Clamp(10 * float.Parse(acc), minPerNote, maxPerNote);
         score = Mathf.Clamp(score, 0, scoreGoal);
         progressBar.fillAmount = score / scoreGoal;
+        if(missBall != null){
+            StopCoroutine(missBall);
+            missBall = null;
+        }
     }
 
     // Reduzir barra de progresso
@@ -69,6 +88,9 @@ public class ScoreManager : MonoBehaviour
         score -= 5;
         score = Mathf.Clamp(score, 0, scoreGoal);
         progressBar.fillAmount = score / scoreGoal;
+        if(score == 0 && missBall == null){
+            missBall = StartCoroutine("MissBallCountdown");
+        }
     }
 
     public void UseScore(float valueUsed){
@@ -77,10 +99,21 @@ public class ScoreManager : MonoBehaviour
         progressBar.fillAmount = score / scoreGoal;
     }
 
+    public IEnumerator MissBallCountdown(){
+        yield return new WaitForSeconds(6);
+        // perde a bola
+        mm.EnemyInstaTake();
+        missBall = null;
+    }
+
     // Resetar os pontos da barra de progresso
     public void ResetScore(){
         score = 0;
         progressBar.fillAmount = score / scoreGoal;
+        if(missBall != null){
+            StopCoroutine(missBall);
+            missBall = null;
+        }
     }
 
     // Impede as notas de aparecerem muito rápido ao trocar de cena

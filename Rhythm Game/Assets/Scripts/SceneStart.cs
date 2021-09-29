@@ -29,6 +29,8 @@ public class SceneStart : MonoBehaviour
         //Atualizo o songitem usado na cena
         UpdateSong();
         TrackPosition();
+    
+        gameManager.GetComponent<GM>().fnh.MovePlayer(0);
     }
 
     void TrackPosition()

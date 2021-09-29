@@ -8,10 +8,12 @@ using RhythmGameStarter;
 public class GM : MonoBehaviour
 {
     public GameObject[] Tracks;
-    string scene;
     private ScoreManager sm;
     private MapManager mm;
-    public string changeScene = "";
+    public FollowNoteHit fnh;
+    [HideInInspector] public string scene;
+    [HideInInspector] public string changeScene = "";
+    [HideInInspector] public bool gameRestart = false;
 
     // Start is called before the first frame update
     void Start()
@@ -23,8 +25,18 @@ public class GM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scene = SceneManager.GetActiveScene().name;
+        // scene = SceneManager.GetActiveScene().name;
         
+        if(gameRestart && Input.GetKeyDown(KeyCode.Y)){
+            // StartCoroutine("RestartGame");
+            Destroy(GameObject.Find("Main Camera"));
+            Destroy(GameObject.Find("RhythmCore 1"));
+            Destroy(GameObject.Find("player"));
+            GameObject canvasToDestroy = GameObject.Find("Canvas");
+            SceneManager.LoadScene("Startup");
+            Destroy(canvasToDestroy.gameObject);
+            Destroy(this.gameObject);
+        }
         // A cena certa é chamada no BallExit() no MapManager
         // if (scene == "Startup")
         // {
@@ -32,17 +44,17 @@ public class GM : MonoBehaviour
         // }
         
         // rodar só uma vez
-        ActiveTracks(scene);
+        // ActiveTracks(scene);
 
-        if (Input.GetKeyDown(KeyCode.O) && sm.score >= (sm.scoreGoal * 0.2f) && mm.ballState == 1 && sm.getScore){
+        if (Input.GetKeyDown(KeyCode.O) && sm.score >= sm.chuteCost && mm.ballState == 1 && sm.getScore){
             // chute
-            sm.UseScore(sm.scoreGoal * 0.2f);
+            sm.UseScore(sm.chuteCost);
             sm.getScore = false;
             mm.MoveBall(2);
         }
-        else if (Input.GetKeyDown(KeyCode.P) && sm.score >= (sm.scoreGoal * 0.4f) && mm.ballState == 1 && sm.getScore){
+        else if (Input.GetKeyDown(KeyCode.P) && sm.score >= sm.passeCost && mm.ballState == 1 && sm.getScore){
             // passe
-            sm.UseScore(sm.scoreGoal * 0.4f);
+            sm.UseScore(sm.passeCost);
             sm.getScore = false;
             mm.MoveBall(1);
         }
@@ -61,16 +73,19 @@ public class GM : MonoBehaviour
         // Troca a cena no início do frame
         if(changeScene != ""){
             SceneManager.LoadScene(changeScene);
+            scene = changeScene;
+            ActiveTracks(scene);
             changeScene = "";
         }
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            SceneManager.LoadScene("PR");
-        }
+        // if (Input.GetKeyDown(KeyCode.G))
+        // {
+        //     SceneManager.LoadScene("PR");
+        // }
         // if (Input.GetKeyDown(KeyCode.T))
         // {
-        //     SceneManager.LoadScene("PGK");
+        //     // SceneManager.LoadScene("PGK");
+        //     changeScene = "PGK";
         // }
         // else if (Input.GetKeyDown(KeyCode.Y))
         // {
@@ -78,11 +93,13 @@ public class GM : MonoBehaviour
         // }
         // else if (Input.GetKeyDown(KeyCode.U))
         // {
-        //     SceneManager.LoadScene("RGK");
+        //     // SceneManager.LoadScene("RGK");
+        //     changeScene = "RGK";
         // }
         // else if (Input.GetKeyDown(KeyCode.I))
         // {
-        //     SceneManager.LoadScene("TACKLE");
+        //     // SceneManager.LoadScene("TACKLE");
+        //     changeScene = "TACKLE";
         // }
         // else if (Input.GetKeyDown(KeyCode.G))
         // {
