@@ -1588,6 +1588,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rc: {fileID: 502088009047003111}
   gm: {fileID: 1899304780}
+  squareColors:
+  - serializedVersion: 2
+    rgba: 4293707895
+  - serializedVersion: 2
+    rgba: 4286216172
 --- !u!114 &1514281592
 MonoBehaviour:
   m_ObjectHideFlags: 0

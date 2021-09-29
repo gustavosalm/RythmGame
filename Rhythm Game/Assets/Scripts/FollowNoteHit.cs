@@ -6,6 +6,7 @@ public class FollowNoteHit : MonoBehaviour
 {
     [SerializeField] private GameObject rc;
     [SerializeField] private GM gm;
+    [SerializeField] private Color32[] squareColors;
     private Vector3 behind;
     void Start()
     {
@@ -29,27 +30,31 @@ public class FollowNoteHit : MonoBehaviour
     public void MovePlayer(int noteHit){
         if(noteHit > 1 && (gm.scene == "PR" || gm.scene == "RR"))
             return;
+        
+        if(!gameObject.activeSelf && gm.scene != "TACKLE")
+            gameObject.SetActive(true);
 
         switch(gm.scene){
             case "PR":
                 transform.position = rc.transform.GetChild(noteHit).GetChild(2).position - new Vector3(.7f, 0, 0);
+                gameObject.GetComponent<SpriteRenderer>().color = squareColors[0];
                 // transform.position = Vector3.MoveTowards(transform.position, rc.transform.GetChild(noteHit).GetChild(2).position, 2 * Time.deltaTime);
                 break;
             case "RR":
                 transform.position = rc.transform.GetChild(noteHit).GetChild(2).position + new Vector3(.7f, 0, 0);
+                gameObject.GetComponent<SpriteRenderer>().color = squareColors[1];
                 // transform.position = Vector3.MoveTowards(transform.position, rc.transform.GetChild(noteHit).GetChild(2).position, 2 * Time.deltaTime);
                 break;
             case "TACKLE":
-                float mod = (noteHit % 2) * -1.4f;
-                print(mod);
-                print(mod + 0.7f);
-                transform.position = rc.transform.GetChild(noteHit).GetChild(2).position + new Vector3(mod + .7f, 0, 0);
+                gameObject.SetActive(false);
                 break;
             case "RGK":
                 transform.position = rc.transform.GetChild(noteHit).GetChild(2).position + new Vector3(0, 1, 0);
+                gameObject.GetComponent<SpriteRenderer>().color = squareColors[1];
                 break;
             case "PGK":
                 transform.position = rc.transform.GetChild(noteHit).GetChild(2).position - new Vector3(0, 1, 0);
+                gameObject.GetComponent<SpriteRenderer>().color = squareColors[0];
                 break;
         }
     }

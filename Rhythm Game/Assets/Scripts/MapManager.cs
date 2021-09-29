@@ -14,7 +14,6 @@ public class MapManager : MonoBehaviour{
     [HideInInspector] public int ballState = 1; // -1 rival | 0 disputa de bola | 1 seu time
     private Vector3 centerPos; // meio de campo
     private float deslocamento, gol; // o tanto que a bola anda por passe
-    private int enemyTaking = 1;
 
     // cores pra eu saber o estado que a bola tá (apenas pra testes)
     private Color32[] states = {new Color32(255, 53, 0, 255), new Color32(213, 255, 0, 255), new Color32(0, 238, 255, 255)};
@@ -88,7 +87,6 @@ public class MapManager : MonoBehaviour{
 
     public void MoveBall(int movement){
         StopCoroutine("EnemyTake");
-        enemyTaking = 1;
         if(ballState <= 1)
             ballPosition += ballState;
 
@@ -229,8 +227,8 @@ public class MapManager : MonoBehaviour{
         yield return new WaitForSeconds(enemyTakeTime);
         if(ballState != 1)
             yield break;
-        sm.UseScore((enemyTakeAmount * enemyTaking / 100) * sm.scoreGoal);
-        if(sm.score == 0){
+        sm.UseScore((enemyTakeAmount / 100) * sm.scoreGoal);
+        if(sm.score <= (0.2f * sm.scoreGoal)){
             ballState = -1;
             ball.GetComponent<Image>().color = states[ballState + 1];
             sm.ResetScore();
@@ -239,7 +237,6 @@ public class MapManager : MonoBehaviour{
             StartCoroutine(PlayAnim(new List<string>() {"Rival rouba a bola"}));
             yield break;
         }
-        enemyTaking++;
         StartCoroutine("EnemyTake");
     }
 
