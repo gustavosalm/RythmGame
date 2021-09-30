@@ -7,10 +7,11 @@ public class FollowNoteHit : MonoBehaviour
     [SerializeField] private GameObject rc;
     [SerializeField] private GM gm;
     [SerializeField] private Color32[] squareColors;
-    private Vector3 behind;
+    private GameObject enemyObject;
     void Start()
     {
-        
+        enemyObject = transform.GetChild(0).gameObject;
+        enemyObject.SetActive(false);
     }
 
     void Update()
@@ -25,6 +26,18 @@ public class FollowNoteHit : MonoBehaviour
             MovePlayer(3);
 
         // transform.position = rc.transform.GetChild(0).GetChild(2).position;
+        if(Input.GetKeyDown(KeyCode.Space))
+            PlayAnim();
+    }
+
+    public void PlayAnim(){
+        enemyObject.SetActive(true);
+        enemyObject.GetComponent<Animator>().Play("CarrinhoAnim", 0, 0);
+        StartCoroutine("StopAnim");
+    }
+    public IEnumerator StopAnim(){
+        yield return new WaitForSeconds(1);
+        enemyObject.SetActive(false);
     }
 
     public void MovePlayer(int noteHit){

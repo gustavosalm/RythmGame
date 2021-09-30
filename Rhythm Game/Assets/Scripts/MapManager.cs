@@ -224,7 +224,9 @@ public class MapManager : MonoBehaviour{
 
     // Rival tenta pegar a bola se o jogador demora pra agir
     public IEnumerator EnemyTake(){
-        yield return new WaitForSeconds(enemyTakeTime);
+        yield return new WaitForSeconds(enemyTakeTime - .5f);
+        gameObject.GetComponent<GM>().fnh.PlayAnim();
+        yield return new WaitForSeconds(.5f);
         if(ballState != 1)
             yield break;
         sm.UseScore((enemyTakeAmount / 100) * sm.scoreGoal);
