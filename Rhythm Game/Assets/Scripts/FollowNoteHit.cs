@@ -26,8 +26,14 @@ public class FollowNoteHit : MonoBehaviour
             MovePlayer(3);
 
         // transform.position = rc.transform.GetChild(0).GetChild(2).position;
-        if(Input.GetKeyDown(KeyCode.Space))
-            PlayAnim();
+        // if(Input.GetKeyDown(KeyCode.Space))
+        //     PlayAnim();
+    }
+
+    public void SwitchColors(){
+        Color32 troca = squareColors[0];
+        squareColors[0] = squareColors[1];
+        squareColors[1] = troca;
     }
 
     public void PlayAnim(){
