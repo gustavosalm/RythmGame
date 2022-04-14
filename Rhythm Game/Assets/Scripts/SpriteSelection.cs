@@ -9,4 +9,8 @@ public class SpriteSelection : MonoBehaviour
     void Start(){
         childs[Random.Range(0, 4)].SetActive(true);
     }
+
+    void Update(){
+        transform.Rotate(new Vector3(0, 0, 1));
+    }
 }

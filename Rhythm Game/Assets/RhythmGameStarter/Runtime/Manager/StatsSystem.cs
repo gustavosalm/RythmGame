@@ -77,7 +77,7 @@ namespace RhythmGameStarter
                     x.onCountUpdate.Invoke(x.count.ToString());
                     UpdateScoreDisplay();
                     onComboStatusUpdate.Invoke(x.name);
-                    // print(x.name);
+                    print(x.name);
                     return;
                 }
             }

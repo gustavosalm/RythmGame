@@ -6,10 +6,12 @@ public class AnimController : MonoBehaviour
 {
 
     private Animator anim;
+    private string selfTag;
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        Invoke("GetTag", 0.5f);
     }
 
     void Update()
@@ -22,6 +24,9 @@ public class AnimController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            if(selfTag == "enemy")
+                return;
+
             int randPunch = Random.Range(0, 3);
 
             if (randPunch == 0)
@@ -43,6 +48,8 @@ public class AnimController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
+            if(selfTag == "enemy")
+                return;
 
             int randKick = Random.Range(0, 3);
 
@@ -60,5 +67,18 @@ public class AnimController : MonoBehaviour
                 anim.SetTrigger("Chute3");
             }
         }
+    }
+
+    public void RivalGettingHit(int noteHit){
+        if(noteHit == 0){
+            anim.SetTrigger("DanoCima");
+        }
+        else if(noteHit == 1){
+            anim.SetTrigger("DanoBaixo");
+        }
+    }
+
+    public void GetTag(){
+        selfTag = this.gameObject.tag;
     }
 }

@@ -1,7 +1,16 @@
 fileFormatVersion: 2
 guid: db2b292c21d8aaf46a74d2d75625248d
 ScriptedImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 5095356628098754965
+    second: Palavras_0
+  - first:
+      213: 1327305297261216140
+    second: Palavras_2
+  - first:
+      213: -8370588849993473567
+    second: Palavras_4
   externalObjects: {}
   serializedVersion: 2
   userData: 
@@ -91,18 +100,18 @@ ScriptedImporter:
     uvTransform: {x: 0, y: 0}
   mosaicSpriteImportData: []
   rigSpriteImportData:
-  - name: cores
+  - name: Palavras_0
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 4
-      y: 4
-      width: 4390
-      height: 4036
-    spriteID: 879be0fed3f12284bad5a23e1631d72f
+      x: 26
+      y: 2910
+      width: 2674
+      height: 1132
+    spriteID: 59922cd5bd756b640800000000000000
     internalID: 0
     spriteBone: []
     spriteOutline: []
@@ -112,7 +121,51 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: -1056, y: -1664}
+    uvTransform: {x: 26, y: 2910}
+  - name: Palavras_2
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 15
+      y: 1518
+      width: 2933
+      height: 1064
+    spriteID: c81cfbfa2298b6210800000000000000
+    internalID: 0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    parentGroupIndex: -1
+    uvTransform: {x: 15, y: 1518}
+  - name: Palavras_4
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 4398
+      height: 1178
+    spriteID: 1e12b4b4ac1b5db80800000000000000
+    internalID: 0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    parentGroupIndex: -1
+    uvTransform: {x: 0, y: 0}
   platformSettings: []
   mosaicLayers: 1
   documentPivot: {x: 0, y: 0}

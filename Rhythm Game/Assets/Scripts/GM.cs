@@ -13,7 +13,8 @@ public class GM : MonoBehaviour
     public FollowNoteHit fnh;
     [HideInInspector] public string scene;
     [HideInInspector] public string changeScene = "";
-    [HideInInspector] public bool gameRestart = false;
+    [HideInInspector] public bool gameRestart = false, segundoTempo = false;
+    [SerializeField] private GameObject animController;
 
     // Start is called before the first frame update
     void Start()
@@ -27,15 +28,21 @@ public class GM : MonoBehaviour
     {
         // scene = SceneManager.GetActiveScene().name;
         
-        if(gameRestart && Input.GetKeyDown(KeyCode.Y)){
+        if(gameRestart /* && Input.GetKeyDown(KeyCode.Y) */){
             // StartCoroutine("RestartGame");
             Destroy(GameObject.Find("Main Camera"));
             Destroy(GameObject.Find("RhythmCore 1"));
             Destroy(GameObject.Find("player"));
+            Destroy(animController);
             GameObject canvasToDestroy = GameObject.Find("Canvas");
-            SceneManager.LoadScene("Startup");
+            SceneManager.LoadScene("Menu");
             Destroy(canvasToDestroy.gameObject);
             Destroy(this.gameObject);
+        }
+
+        if(segundoTempo && mm.ballState < 2){
+            segundoTempo = false;
+            mm.SegundoTempo();
         }
         // A cena certa é chamada no BallExit() no MapManager
         // if (scene == "Startup")
@@ -72,6 +79,7 @@ public class GM : MonoBehaviour
 
         // Troca a cena no início do frame
         if(changeScene != ""){
+            if(changeScene == "PGK" || changeScene == "RGK") sm.GoalKeeperScene(changeScene);
             SceneManager.LoadScene(changeScene);
             scene = changeScene;
             ActiveTracks(scene);
@@ -96,7 +104,7 @@ public class GM : MonoBehaviour
         //     // SceneManager.LoadScene("RGK");
         //     changeScene = "RGK";
         // }
-        // else if (Input.GetKeyDown(KeyCode.I))
+        // if (Input.GetKeyDown(KeyCode.I))
         // {
         //     // SceneManager.LoadScene("TACKLE");
         //     changeScene = "TACKLE";

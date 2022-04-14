@@ -269,7 +269,7 @@ namespace UnityEditor.TestTools.TestRunner
             {
 #if UNITY_2020_2_OR_NEWER
                 case BuildTarget.GameCoreXboxOne:
-                // case BuildTarget.GameCoreXboxSeries:
+                case BuildTarget.GameCoreXboxSeries:
 #else
                 case BuildTarget.XboxOne:
 #endif

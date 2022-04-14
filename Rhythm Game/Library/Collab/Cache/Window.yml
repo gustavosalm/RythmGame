@@ -14,31 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SimpleSelectedItems:
     m_Keys:
-    - "Assets/Anima\xE7\xF5es de Cena/Chutando a Gol/Alemanha.meta"
-    - "Assets/Anima\xE7\xF5es de Cena/Comemorando Gol/Alemanha/comemora\xE7\xE3o
-      de gol (skin alemanha).anim"
-    - "Assets/Anima\xE7\xF5es de Cena/Comemorando Gol/Argentina/comemora\xE7\xE3o
-      de gol (skin argentina).anim"
-    - "Assets/Anima\xE7\xF5es de Cena/Comemorando Gol/Brasil/comemora\xE7\xE3o de
-      gol (skin brasil).anim"
-    - "Assets/Anima\xE7\xF5es de Cena/Comemorando Gol/It\xE1lia/comemora\xE7\xE3o
-      de gol (skin italia).anim"
-    - "Assets/Anima\xE7\xF5es de Cena/Disputa de Bola/disputa de bola NOVA VERS\xC3O.prefab"
-    - "Assets/Anima\xE7\xF5es de Cena/Passando a Bola/Brasil/Skin Brasil Passando
-      a Bola.prefab"
-    - "Assets/Anima\xE7\xF5es de Cena/Recebendo a Bola/Italia/Recebendo a Bola It\xE1lia.prefab"
-    - Assets/RhythmGameStarter/QuickStart/Basic/Prefabs/Notes/Note.prefab
-    - Assets/Scenes/PR.unity
-    - Assets/Scenes/RR.unity
-    - Assets/Scenes/Startup.unity
-    - Assets/Scripts/ScenarioMovement.cs
-    - Assets/Scripts/ScenarioMovement.cs.meta
-    - "Assets/Sprites/cen\xE1rio 2.png.meta"
-    - "Assets/Sprites/cen\xE1rio.png.meta"
-    - Assets/Sprites/objetos.psb.meta
+    - Assets/Scenes/TACKLE(original).unity
+    - Assets/Scenes/TACKLE(original).unity.meta
     - ProjectSettings/ProjectVersion.txt
     - 
-    m_Values: 00000000000000000000000000000000000000
+    m_Values: 00000000
   RevisionSummary: 
   ChangesSearchValue: 
   SelectedHistoryRevision: 

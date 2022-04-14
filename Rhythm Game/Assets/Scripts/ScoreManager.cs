@@ -12,6 +12,9 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private float minPerNote, maxPerNote;
     public float scoreGoal, passeCost, chuteCost;
     private Coroutine missBall = null;
+    [SerializeField] private GameObject map;
+    private GameObject topBarObj;
+    private Vector3 topBarDefaultPos;
 
     [HideInInspector] public int currentTime = 0, seconds = 0;
     [HideInInspector] public float startTime = 0;
@@ -26,6 +29,9 @@ public class ScoreManager : MonoBehaviour
         AlterarPlacar();
         progressBar.fillAmount = score / scoreGoal;
         timer.text = "00:00";
+
+        topBarObj = timer.gameObject.transform.parent.gameObject;
+        topBarDefaultPos = topBarObj.transform.localPosition;
     }
 
     void Update() {
@@ -40,7 +46,9 @@ public class ScoreManager : MonoBehaviour
             segundoTempo = true;
             currentTime = 0;
             songFinished = false;
-            mm.SegundoTempo();
+            gameObject.GetComponent<GM>().segundoTempo = true;
+            // mm.SegundoTempo();
+            ResetMapAndScore();
             startTime = Time.fixedTime + 1;
             if(missBall != null){
                 StopCoroutine(missBall);
@@ -51,15 +59,15 @@ public class ScoreManager : MonoBehaviour
 
     public void SongFinished(){
         if(segundoTempo){
-            mm.animPanel.SetActive(true);
-            mm.animPanel.transform.GetChild(0).GetComponent<Text>().text = "fim de jogo\naperte y para reiniciar.";
-            gameObject.GetComponent<GM>().gameRestart = true;
+            // mm.animPanel.SetActive(true);
+            // mm.animPanel.transform.GetChild(0).GetComponent<Text>().text = "fim de jogo\naperte y para reiniciar.";
             mm.StopCoroutine("AutoAction");
             mm.StopCoroutine("EnemyTake");
             if(missBall != null){
                 StopCoroutine(missBall);
                 missBall = null;
             }
+            gameObject.GetComponent<GM>().gameRestart = true;
         }
         songFinished = true;
     }
@@ -114,6 +122,7 @@ public class ScoreManager : MonoBehaviour
             StopCoroutine(missBall);
             missBall = null;
         }
+        ResetMapAndScore();
     }
 
     // Impede as notas de aparecerem muito rápido ao trocar de cena
@@ -123,6 +132,18 @@ public class ScoreManager : MonoBehaviour
             // note.gameObject.tag = "Untagged";
             note.gameObject.SetActive(false);
         }
+    }
+
+    public void GoalKeeperScene(string scene){
+        map.SetActive(false);
+        if(scene == "RGK"){
+            topBarObj.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -199, 0);
+        }
+    }
+
+    public void ResetMapAndScore(){
+        topBarObj.transform.localPosition = topBarDefaultPos;
+        map.SetActive(true);
     }
 
     // public IEnumerator ClearNotes(){
